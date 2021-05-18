@@ -1,0 +1,21 @@
+html, body {
+    font-family: 'Roboto', 'Helvetica', sans-serif;
+}
+
+a {
+    text-decoration: underline;
+    color: #039BE5;
+}
+
+#status_table, #reservation_table, #reservation_user_table {
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+
+#status_table td,
+#reservation_table td,
+#reservation_user_table td {
+    border-collapse: collapse;
+    border: 1px solid black;
+    padding: 2px 5px
+}

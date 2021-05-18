@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chaleira control Center</title>
+  <link rel="stylesheet" href="main.css">
+</head>
+<body>
+<div id="status_overview">
+
+  <table id="status_table">
+    <thead>
+    <tr>
+      <th>Property</th>
+      <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>Status</td>
+      <td><span id="status"></span></td>
+    </tr>
+    <tr>
+      <td>Water</td>
+      <td><span id="cur_water"></span>/<span id="max_water"></span></td>
+    </tr>
+    <tr>
+      <td># reservations</td>
+      <td><span id="reservations_count"></span></td>
+    </tr>
+    </tbody>
+  </table>
+<br/>
+<br/>
+  <table id="reservation_table">
+    <thead>
+    <tr>
+      <th>User</th>
+      <th>Quantity</th>
+      <th>Status</th>
+    </tr>
+    </thead>
+    <tbody id="reservation_table_body">
+    </tbody>
+  </table>
+<br/>
+<br/>
+  <table id="reservation_user_table">
+    <thead>
+    <tr>
+      <th>User</th>
+      <th>Quantity</th>
+      <th>Status</th>
+    </tr>
+    </thead>
+    <tbody id="reservation_user_table_body">
+    </tbody>
+  </table>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <button onclick="reserve()"> add reservation </button><br/><br/>
+  <button onclick="clearReserves()"> clear reservations </button><br/><br/>
+  <button onclick="switchKettleStatus()"> switch status</button><br/><br/>
+  <button onclick="setWaterLevel()"> set water level</button><br/><br/>
+  <button onclick="getUserReservations()"> get reservations for user</button><br/><br/>
+  <button onclick="changeReservationStatus()"> change reservation status</button><br/><br/>
+</div>
+
+<!-- Import and configure the Firebase SDK -->
+<!-- These scripts are made available when the app is served or deployed on Firebase Hosting -->
+<!-- If you do not serve/host your project using Firebase Hosting see https://firebase.google.com/docs/web/setup -->
+<script src="/__/firebase/8.6.1/firebase-app.js"></script>
+<script src="/__/firebase/8.6.1/firebase-auth.js"></script>
+<script src="/__/firebase/8.6.1/firebase-database.js"></script>
+<script src="/__/firebase/init.js"></script>
+
+<script src="scripts/main.js"></script>
+</body>
+</html>
