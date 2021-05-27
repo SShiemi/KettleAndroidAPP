@@ -68,7 +68,7 @@ This table that holds all the current reservations. The fields for each reservat
 ### User Reservation Data
 This table is usually empty, but can be used to represent the same date as the *__Global Reservation Data Table__*
 filtered by user `UUID`. 
-*__The fields of this table are the same as the global one.__*
+>*__The fields of this table are the same as the global one.__*
 
 ## Command Buttons
 There is a small list of command buttons that can be used to interact with the database or to test functionalities.
@@ -81,26 +81,26 @@ Upon clicking it, a prompt appears, which asks for the amount in *__ml__* to be 
 
 The user for the reservation will be the currently selected user. *__(Default: the kettle admin user)__*
 
-*__This action will ignore all business logic and directly insert a pending request on the database__*
+>*__This action will ignore all business logic and directly insert a pending request on the database__*
 
 ### Change User
 This button will change the user used to communicate with the firebase.
 
 Upon clicking it, a prompt appears, which asks for the `UUID` if the user. *__(Default: the kettle admin user)__*
 
-*__This action does not interact with the database directly__*
+>*__This action does not interact with the database directly__*
 
 ### Clear Reservations
 This button will remove *__all__* existing reservations from the database.
 
-*__This action is irreversible and is used only for debugging purposes__*
+>*__This action is irreversible and is used only for debugging purposes__*
 
 ### Switch Status
 This button can change the kettle status ad-hoc in the firebase.
 
 Upon clicking it, a prompt appears, which asks for the new status. 
 
-*__This action can be performed only by the kettle admin user and will ignore all business logic and directly interacts with the database__*
+>*__This action can be performed only by the kettle admin user and will ignore all business logic and directly interacts with the database__*
 
 ### Set Water Level
 This button can change the current water level ad-hoc in the firebase.
@@ -109,7 +109,7 @@ Upon clicking it, a prompt appears, which asks for the amount in *__ml__* to be 
 
 The user for the reservation will be the currently selected user. *__(Default: the kettle admin user)__*
 
-*__This action can be performed only by the kettle admin user and will ignore all business logic and directly interacts with the database__*
+>*__This action can be performed only by the kettle admin user and will ignore all business logic and directly interacts with the database__*
 
 ### Get Reservations For User
 This button adds a listener to the database which will populate automatically the user reservation table.
@@ -121,4 +121,4 @@ This button can change the status of a reservation ad-hoc in the firebase.
 
 Upon clicking it, a prompt appears, which asks for the reservation and the new status. 
 
-*__This action will ignore all business logic and directly interacts with the database__*
+>*__This action will ignore all business logic and directly interacts with the database__*
