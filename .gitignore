@@ -105,3 +105,4 @@ dist
 
 # IntelliJ files
 .idea
+.gradle
