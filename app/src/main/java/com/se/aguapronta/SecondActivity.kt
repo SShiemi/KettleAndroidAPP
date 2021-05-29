@@ -82,14 +82,14 @@ class SecondActivity : AppCompatActivity() {
                 statusapp.text = sb.toString()
 
 
-                if(brewing.equals("true", ignoreCase = true)){
+                if(brewing.equals("Brewing", ignoreCase = true)){
                     aval = false
                     brew = true
                     val avalsymb2 = findViewById(R.id.avalsymb2) as ImageView
                     avalsymb2.setImageResource(R.drawable.cross)
                 }
 
-                else if(brewing.equals("false", ignoreCase = true)){
+                else if(brewing.equals("Not Brewing", ignoreCase = true)){
                     aval=true
                     brew = false
                     val avalsymb2 = findViewById(R.id.avalsymb2) as ImageView
@@ -97,13 +97,13 @@ class SecondActivity : AppCompatActivity() {
                 }
 
 
-                if(curWater < 27 || brewing.equals("true", ignoreCase = true)){
+                if(curWater < 27 || brewing.equals("Brewing", ignoreCase = true)){
                     aval = false
                     val avalsymb1 = findViewById(R.id.avalsymb1) as ImageView
                     avalsymb1.setImageResource(R.drawable.nocross)
                 }
 
-                else if(curWater > 27 && status.toString().equals("Idle", ignoreCase = true)  && brewing.equals("false", ignoreCase = true)){
+                else if(curWater > 27 && status.toString().equals("Idle", ignoreCase = true)  && brewing.equals("Not Brewing", ignoreCase = true)){
                     aval = true
                     val avalsymb1 = findViewById(R.id.avalsymb1) as ImageView
                     avalsymb1.setImageResource(R.drawable.cross)
