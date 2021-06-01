@@ -5,25 +5,28 @@ const ON = 0, // on
 var data = require('../data.js'), // data module -> de onde vem os dados dos sensores
     status = OFF,
     brewing = false,
-    currentWater = 0
+    currentWater = 0,
+    currentTemperature,
+    currentHumidity,
     maxWater = 450 //Maximum amount that the kettle can handle
     totalWaterReserved =0;
 
-//temperature
+//data = [weight,temperature,humidity]
 
-//humidity
-
-//weight
-
-function measureWaterLevel() {
-
+function getWaterLevel(data) {
+var str=data.split(";",3);
+return str[0];
+ 
 }
 
-function measureWaterTemperature(){ 
+function getTemperature(data){ 
+var str=data.split(";",3);
+return str[1];
 }
 
-function measureWaterHumidity(){ 
-
+function getHumidity(data){ 
+var str=data.split(";",3);
+return str[2];
 }
 
 /*
@@ -32,20 +35,20 @@ function checkKettle(){
 }*/
 
 function checkBrewing(reservation){
-
-	if(humidity>70 && temperature>99){
+	
+	if(currentHumidity>70 && currentTemperature>99){
 		sendtoFirebase('kettle/brewing',"Stop Brewing");
-		data.sendtoFirebase('kettle/cur_water',weight);
+		data.sendtoFirebase('kettle/cur_water',currentWeight);
 		processBrewingReservation(reservation); //transita de ferver para done
 	}
-	else if (humidity>50 && temperature>30 && temperature<99 ){
+	else if (currentHumidity>50 && currentTemperature>30 && currentTemperature<99 ){
 		sendtoFirebase('kettle/brewing',"Brewing");
-		data.sendtoFirebase('kettle/cur_water',weight);
+		data.sendtoFirebase('kettle/cur_water',currentWeight);
 		processApprovedReservation(reservation); //transita de aprovada para a ferver
 	}
 	else {
 		sendtoFirebase('kettle/brewing',"Not Brewing"); //transita de done para deleted ?
-		data.sendtoFirebase('kettle/cur_water',weight);
+		data.sendtoFirebase('kettle/cur_water',currentWeight);
 		processDoneReservation(reservation); 
 	}
 
