@@ -243,7 +243,7 @@ class SecondActivity : AppCompatActivity() {
             v.startAnimation(animation1)
             v.startAnimation(animation2)
             if(aval){
-                database.setValue("true")
+                database.setValue("Brewing")
             }
 
             else if(!aval){
