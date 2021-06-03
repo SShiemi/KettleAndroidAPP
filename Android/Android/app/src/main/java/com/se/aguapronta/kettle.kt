@@ -57,23 +57,3 @@ data class UserReservation(
 
 
 
-
-
-/**
-class Kettle ( available: String,  cur_water: Int, status: String) {
-
-    private var available: String? = available
-    private var cur_water: String? = cur_water
-    private var status: String? = status
-
-    fun getAvail() : String? {
-        return available
-    }
-
-    fun getWater() : Int? {
-        return cur_water
-    }
-    fun setStatus(status: String) {
-        this.status = status
-    }
-}**/
