@@ -1,9 +1,11 @@
+  
+var data = require('./data.js'), // data module
+
 const ON = 0, // on
       OFF = 1; //off
 
 
-var data = require('../data.js'), // data module -> de onde vem os dados dos sensores
-    status = OFF,
+var status = OFF,
     brewing = false,
     currentWater = 0,
     currentTemperature,
@@ -24,10 +26,13 @@ var str=data.split(";",3);
 return str[1];
 }
 
+/*
 function getHumidity(data){ 
 var str=data.split(";",3);
 return str[2];
 }
+*/
+
 
 /*
 function checkKettle(){
@@ -36,7 +41,7 @@ function checkKettle(){
 
 function checkBrewing(reservation){
 	
-	if(currentHumidity>70 && currentTemperature>99){
+	if(currentTemperature>99){
 		sendtoFirebase('kettle/brewing',"Stop Brewing");
 		data.sendtoFirebase('kettle/cur_water',currentWeight);
 		processBrewingReservation(reservation); //transita de ferver para done

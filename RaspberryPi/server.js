@@ -9,7 +9,6 @@ var firebaseConfig = {
   storageBucket: "chaleira-fcup.appspot.com",
   messagingSenderId: "736611827239",
   appId: "1:736611827239:web:de4021618fedf5f8141802"
-
 };
 
 var app = firebase.initializeApp(firebaseConfig); // Initialize Firebase
