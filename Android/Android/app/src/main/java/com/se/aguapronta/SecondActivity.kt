@@ -1,7 +1,13 @@
 package com.se.aguapronta
 
 import android.annotation.SuppressLint
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -30,6 +36,12 @@ class SecondActivity : AppCompatActivity() {
     public var aval = false
     public var curWater = 0
     public var countreserv = 0
+
+    lateinit var notificationManager: NotificationManager
+    lateinit var notificationChannel: NotificationChannel
+    lateinit var builder: Notification.Builder
+    val channelId = "com.se.aguapronta"
+    val description = "Your reserved tea is ready!"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -146,6 +158,33 @@ class SecondActivity : AppCompatActivity() {
                         sb2.append("$status")
 
                         if(status.toString().equals("done", ignoreCase = true)){
+                            notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                            val intent = Intent(this@SecondActivity,SecondActivity::class.java)
+
+
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                val pendingIntent = PendingIntent.getActivity(this@SecondActivity, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                                notificationChannel = NotificationChannel(channelId, description, NotificationManager.IMPORTANCE_HIGH)
+                                notificationChannel.enableLights(true)
+                                notificationChannel.enableVibration(true)
+                                notificationManager.createNotificationChannel(notificationChannel)
+
+                                builder = Notification.Builder(this@SecondActivity, channelId)
+                                    .setSmallIcon(R.drawable.kettle)
+                                    .setContentIntent(pendingIntent)
+                                    .setContentText("Your reserved tea is ready!")
+                                    .setContentTitle("Reservation Status")
+                            } else {
+                                val pendingIntent = PendingIntent.getActivity(this@SecondActivity, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                                builder = Notification.Builder(this@SecondActivity)
+                                    .setSmallIcon(R.drawable.ic_launcher_background)
+                                    .setContentIntent(pendingIntent)
+                                    .setContentText("Your reserved tea is ready!")
+                                    .setContentTitle("Reservation Status")
+                            }
+                            notificationManager.notify(1, builder.build())
+
+
                             Toast.makeText(this@SecondActivity, "Your reserved tea is ready!", Toast.LENGTH_LONG).show()
                         }
 
