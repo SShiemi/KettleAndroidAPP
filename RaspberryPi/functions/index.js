@@ -4,12 +4,14 @@ const sensorsMock = require("./data");
 
 domain.startListeners();
 
-// debugSerialPort();
+debugSerialPort().then(function (){
+    console.log("Arduino Mock is done loading data!");
+});
 
 async function debugSerialPort(){
     for (let i = 0; i < 11; i++) {
         await sleep(1000);
-        sensorsMock.debug("water:450;temp:40");
+        sensorsMock.debug("water:900;temp:20");
     }
 }
 

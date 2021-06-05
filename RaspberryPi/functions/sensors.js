@@ -1,4 +1,5 @@
 const server = require('./server');// data module
+const KETTLE_WEIGHT=440;
 
 let currentWater = 0,
     currentTemperature = 0,
@@ -8,6 +9,7 @@ let lastWeightMeasurements = [];
 let waterIsCounted = false;
 
 let brewingStatus = 'Not Brewing';
+let kettleStatus = 'Off';
 
 function startListeners() {
     server.listenRef("/kettle/status", toggleStatus);
@@ -32,6 +34,8 @@ function toggleStatus(statusRef) {
         });
         //TODO add code to turn the kettle OFF if proper hardware exists!
     }
+
+    kettleStatus = status;
 }
 
 function toggleBrewing(brewingRef) {
@@ -72,7 +76,7 @@ function processNewReservations(reservationRef) {
 
         let UUID = reservationRef.getRef().getKey();
 
-        if (reservation.status.toLowerCase() === "pending") {
+        if (reservation.status.toLowerCase() === "pending" && kettleStatus === "Idle") {
             if (reservation.amount < currentWater - totalWaterReserved) {
                 server.sendToFirebase("/reservations/" + UUID + "/status", "Approved")
                     .then(
@@ -178,7 +182,7 @@ function processDoneReservation(reservationsRef) {
 
 function handleArduinoData(data) {
     currentTemperature = parseFloat(data["temp"]);
-    addWaterMeasurement(data["water"]);
+    addWaterMeasurement(data["water"]-KETTLE_WEIGHT);
     checkBrewing();
 }
 
