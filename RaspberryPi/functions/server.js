@@ -13,7 +13,11 @@ let firebaseConfig = {
 };
 
 let app = firebase.initializeApp(firebaseConfig); // Initialize Firebase
-firebase.auth().signInWithEmailAndPassword('kettle@example.com', 'password');
+firebase.auth().signInWithEmailAndPassword('kettle@example.com', 'password').then(
+    function () {
+        console.log("Logged in as admin!");
+    }
+);
 let database = app.database();
 
 function sendToFirebase(path, value) {
@@ -45,7 +49,12 @@ function getUserReservationByStatus(status, callback) {
         .ref('/reservations/')
         .orderByChild('status')
         .equalTo(status)
-        .once("value", callback);
+        .once("value", callback)
+        .then(
+            function () {
+                console.log("Reservations with status " + status + " obtained");
+            }
+        );
 }
 
 let output = {
