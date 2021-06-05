@@ -4,7 +4,7 @@ const sensorsMock = require("./data");
 
 domain.startListeners();
 
-debugSerialPort();
+// debugSerialPort();
 
 async function debugSerialPort(){
     for (let i = 0; i < 11; i++) {

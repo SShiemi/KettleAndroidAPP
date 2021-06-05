@@ -1,4 +1,3 @@
-// var data = require('./data');// data module
 const server = require('./server');// data module
 
 let currentWater = 0,
@@ -178,7 +177,7 @@ function processDoneReservation(reservationsRef) {
 }
 
 function handleArduinoData(data) {
-    currentTemperature = data["temp"];
+    currentTemperature = parseFloat(data["temp"]);
     addWaterMeasurement(data["water"]);
     checkBrewing();
 }
