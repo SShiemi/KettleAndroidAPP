@@ -3,7 +3,6 @@ const server = require('./server');// data module
 
 let currentWater = 0,
     currentTemperature = 0,
-    currentHumidity = 0,
     maxWater = 450, //Maximum amount that the kettle can handle
     totalWaterReserved = 0;
 
@@ -138,7 +137,6 @@ function setReservationsDone() {
 }
 
 function handleArduinoData(data) {
-    currentHumidity = data["humidity"];
     currentTemperature = data["temp"];
     addWaterMeasurement(data["water"]);
     checkBrewing();
@@ -175,7 +173,7 @@ function checkBrewing() {
     if (currentTemperature > 99) {
         server.sendToFirebase('kettle/brewing', "Stop Brewing");
         server.getUserReservationByStatus("Brewing", processBrewingReservations);
-    } else if (currentHumidity > 50 && currentTemperature > 30 && currentTemperature < 99) {
+    } else if (currentTemperature > 30 && currentTemperature < 99) {
         server.sendToFirebase('kettle/brewing', "Brewing");
         server.getUserReservationByStatus("Approved", processApprovedReservations);
     } else {
