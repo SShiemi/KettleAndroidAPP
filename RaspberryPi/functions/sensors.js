@@ -8,6 +8,8 @@ let currentWater = 0,
 let lastWeightMeasurements = [];
 let waterIsCounted = false;
 
+let brewingStatus = 'Not Brewing';
+
 function startListeners() {
     server.listenRef("/kettle/status", toggleStatus);
     server.listenRef("kettle/brewing", toggleBrewing);
@@ -34,18 +36,17 @@ function toggleStatus(statusRef) {
 }
 
 function toggleBrewing(brewingRef) {
-    let brewing = brewingRef.val();
+    brewingStatus = brewingRef.val();
 
-    if (brewing.toLowerCase() === "starting") {
+    if (brewingStatus.toLowerCase() === "Starting") {
         server.sendToFirebase("/kettle/brewing", "Brewing").then(function () {
-            console.log("Brewing changed to:" + brewing);
+            console.log("Brewing changed to:" + brewingStatus);
         });
-        setReservationsBrewing();
-    } else if (brewing.toLowerCase() === "stop brewing") {
+    } else if (brewingStatus.toLowerCase() === "Stop Brewing") {
         server.sendToFirebase("/kettle/brewing", "Not Brewing").then(function () {
-            console.log("Brewing changed to:" + brewing);
+            console.log("Brewing changed to:" + brewingStatus);
         });
-        setReservationsDone();
+        server.getUserReservationByStatus("Done", processDoneReservation);
     }
 }
 
@@ -176,14 +177,6 @@ function processDoneReservation(reservationsRef) {
     }
 }
 
-function setReservationsBrewing() {
-    return server.getUserReservationByStatus("Approved");
-}
-
-function setReservationsDone() {
-    return server.getUserReservationByStatus("Done");
-}
-
 function handleArduinoData(data) {
     currentTemperature = data["temp"];
     addWaterMeasurement(data["water"]);
@@ -205,7 +198,7 @@ function addWaterMeasurement(measurement) {
 }
 
 function updateWaterLevel(newWaterLevel) {
-    if (currentWater * 0.95 < newWaterLevel || newWaterLevel < currentWater * 1.05) {
+    if (currentWater * 0.95 > newWaterLevel || newWaterLevel > currentWater * 1.05) {
         currentWater = newWaterLevel;
         server.sendToFirebase('kettle/cur_water', currentWater)
             .then(
@@ -227,30 +220,22 @@ function updateWaterLevel(newWaterLevel) {
 }
 
 function checkBrewing() {
-    if (currentTemperature > 99) {
+    if (currentTemperature > 99 && brewingStatus === "Brewing") {
         server.sendToFirebase('kettle/brewing', "Stop Brewing")
             .then(
                 function () {
-                        console.log("Kettle Stops brewing");
+                    console.log("Kettle Stops brewing");
                 }
             );
         server.getUserReservationByStatus("Brewing", processBrewingReservations);
-    } else if (currentTemperature > 30 && currentTemperature < 99) {
-        server.sendToFirebase('kettle/brewing', "Brewing")
+    } else if (currentTemperature > 30 && brewingStatus === "Not Brewing") {
+        server.sendToFirebase('kettle/brewing', "Start Brewing")
             .then(
                 function () {
                     console.log("Kettle Starts brewing");
                 }
             );
         server.getUserReservationByStatus("Approved", processApprovedReservations);
-    } else {
-        server.sendToFirebase('kettle/brewing', "Not Brewing")
-            .then(
-                function () {
-                    console.log("Kettle is done Brewing");
-                }
-            );
-        server.getUserReservationByStatus("Done", processDoneReservation);
     }
 }
 
