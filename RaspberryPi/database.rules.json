@@ -1,0 +1,23 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": true,
+    "users": {
+      "$uid": {
+        ".write": "auth != null && auth.uid == $uid"
+      }
+    },
+    "kettle": {
+      ".write": "auth != null && auth.uid == 'f0YWpdQP04Yi2vG8mB49LCBBFlm2'"
+    },
+    "reservations": {
+      ".write": "auth != null"
+    },
+    "user-reservations": {
+      ".write": "auth != null && auth.uid == 'f0YWpdQP04Yi2vG8mB49LCBBFlm2'",
+      "$uid": {
+        ".write": "auth != null && auth.uid == $uid"
+      }
+    }
+  }
+}
