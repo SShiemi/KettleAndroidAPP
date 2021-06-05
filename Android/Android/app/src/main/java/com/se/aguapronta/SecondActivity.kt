@@ -132,6 +132,8 @@ class SecondActivity : AppCompatActivity() {
 
 
 
+
+
             }
         }
         databaseWater.addValueEventListener(getdata)
@@ -157,7 +159,7 @@ class SecondActivity : AppCompatActivity() {
                         countreserv +=1
                         sb2.append("$status")
 
-                        if(status.toString().equals("done", ignoreCase = true)){
+                        if(status.toString().equals("Deleted", ignoreCase = true)){
                             notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                             val intent = Intent(this@SecondActivity,SecondActivity::class.java)
 
@@ -219,7 +221,18 @@ class SecondActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 var count = snapshot.childrenCount
                 var textstatres = findViewById(R.id.textstatres) as TextView
-                textstatres.text = "$count x pending"
+                for(i in snapshot.children){
+                var status = i.child("status").value
+                var amount = i.child("amount").value.toString()
+                if(status.toString().equals("Rejected", ignoreCase = true)  || textstatres.toString().equals("Deleted", ignoreCase = true)) {
+                    count-=1
+                    if(status.toString().equals("Rejected", ignoreCase = true)){
+                            Toast.makeText(this@SecondActivity, "Your reserved tea with $amount cl was rejected!", Toast.LENGTH_LONG).show()
+
+                        }
+                    }
+                }
+                textstatres.text = "$count in line"
             }
 
         }
