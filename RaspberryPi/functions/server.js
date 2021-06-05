@@ -16,8 +16,6 @@ let app = firebase.initializeApp(firebaseConfig); // Initialize Firebase
 firebase.auth().signInWithEmailAndPassword('kettle@example.com', 'password');
 let database = app.database();
 
-const STATUS_REF = firebase.database().ref('/status');
-
 function sendToFirebase(path, value) {
     return database.ref(path).set(value).then(() => {
         console.log('Synchronization succeeded');
@@ -40,8 +38,6 @@ function listenRefChild(path, callback) {
         callback(snapshot);
     });
 }
-
-// listenRef("/user-reservations/", getUserReservationByStatus);
 
 function getUserReservationByStatus(status, callback) {
     firebase

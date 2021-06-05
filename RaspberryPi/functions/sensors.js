@@ -14,7 +14,7 @@ function startListeners() {
     server.listenRef("/kettle/status", toggleStatus);
     server.listenRef("kettle/brewing", toggleBrewing);
     server.listenRef("/reservations/", countWaterReserved);
-    server.listenRefChild("/reservations/", processNewReservation);
+    server.listenRefChild("/reservations/", processNewReservations);
 }
 
 function toggleStatus(statusRef) {
@@ -67,7 +67,7 @@ function countWaterReserved(reservationsRef) {
     waterIsCounted = true;
 }
 
-function processNewReservation(reservationRef) {
+function processNewReservations(reservationRef) {
 
     if (waterIsCounted) {
         let reservation = reservationRef.val();
@@ -87,39 +87,46 @@ function processNewReservation(reservationRef) {
     }
 }
 
-function processApprovedReservation(reservation) {
+function processApprovedReservations(reservationsRef) {
 
-    console.log(reservation.val());
+    let reservations = reservationsRef.val();
 
-    let UUID = reservation.getRef().getKey();
-
-    if (reservation.status === "Approved") {
-        server.sendToFirebase("/reservations/" + UUID + "/status", "Brewing");
-        server.sendToFirebase("/user-reservations/" + reservation.userUid + "/" + UUID + "/status", "Brewing");
+    if (reservations !== null) {
+        for (const [UUID, entry] of Object.entries(reservations)) {
+            if (entry.status.toLowerCase() === "approved") {
+                server.sendToFirebase("/reservations/" + UUID + "/status", "Brewing");
+                server.sendToFirebase("/user-reservations/" + entry.userUid + "/" + UUID + "/status", "Brewing");
+            }
+        }
     }
-
 }
 
-function processBrewingReservation(reservation) {
+function processBrewingReservations(reservationsRef) {
 
-    let UUID = reservation.getRef().getKey();
+    let reservations = reservationsRef.val();
 
-    if (reservation.status === "Brewing") {
-        server.sendToFirebase("/reservations/" + UUID + "/status", "Done");
-        server.sendToFirebase("/user-reservations/" + reservation.userUid + "/" + UUID + "/status", "Done");
+    if (reservations !== null) {
+        for (const [UUID, entry] of Object.entries(reservations)) {
+            if (entry.status.toLowerCase() === "brewing") {
+                server.sendToFirebase("/reservations/" + UUID + "/status", "Done");
+                server.sendToFirebase("/user-reservations/" + entry.userUid + "/" + UUID + "/status", "Done");
+            }
+        }
     }
-
 }
 
-function processDoneReservation(reservation) {
+function processDoneReservation(reservationsRef) {
 
-    let UUID = reservation.getRef().getKey();
+    let reservations = reservationsRef.val();
 
-    if (reservation.status === "Done") {
-        server.sendToFirebase("/reservations/" + UUID + "/status", "Deleted");
-        server.sendToFirebase("/user-reservations/" + reservation.userUid + "/" + UUID + "/status", "Deleted");
+    if (reservations !== null) {
+        for (const [UUID, entry] of Object.entries(reservations)) {
+            if (entry.status.toLowerCase() === "done") {
+                server.sendToFirebase("/reservations/" + UUID + "/status", "Deleted");
+                server.sendToFirebase("/user-reservations/" + entry.userUid + "/" + UUID + "/status", "Deleted");
+            }
+        }
     }
-
 }
 
 function setReservationsBrewing() {
@@ -167,10 +174,10 @@ function updateWaterLevel(newWaterLevel) {
 function checkBrewing() {
     if (currentTemperature > 99) {
         server.sendToFirebase('kettle/brewing', "Stop Brewing");
-        server.getUserReservationByStatus("Brewing", processBrewingReservation);
+        server.getUserReservationByStatus("Brewing", processBrewingReservations);
     } else if (currentHumidity > 50 && currentTemperature > 30 && currentTemperature < 99) {
         server.sendToFirebase('kettle/brewing', "Brewing");
-        server.getUserReservationByStatus("Approved", processApprovedReservation);
+        server.getUserReservationByStatus("Approved", processApprovedReservations);
     } else {
         server.sendToFirebase('kettle/brewing', "Not Brewing");
         server.getUserReservationByStatus("Done", processDoneReservation);
