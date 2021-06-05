@@ -224,12 +224,11 @@ class SecondActivity : AppCompatActivity() {
                 for(i in snapshot.children){
                 var status = i.child("status").value
                 var amount = i.child("amount").value.toString()
+                if(status.toString().equals("Rejected", ignoreCase = true)){
+                        Toast.makeText(this@SecondActivity, "Your reserved tea with $amount cl was rejected!", Toast.LENGTH_LONG).show()
+                }
                 if(status.toString().equals("Rejected", ignoreCase = true)  || textstatres.toString().equals("Deleted", ignoreCase = true)) {
                     count-=1
-                    if(status.toString().equals("Rejected", ignoreCase = true)){
-                            Toast.makeText(this@SecondActivity, "Your reserved tea with $amount cl was rejected!", Toast.LENGTH_LONG).show()
-
-                        }
                     }
                 }
                 textstatres.text = "$count in line"
