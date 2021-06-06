@@ -51,9 +51,9 @@ function toggleBrewing(brewingRef) {
         server.sendToFirebase("/kettle/brewing", "Not Brewing").then(function () {
             console.log("Brewing changed to: Stop Brewing");
         });
+        server.getUserReservationByStatus("Brewing", processBrewingReservations);
         server.getUserReservationByStatus("Done", processDoneReservation);
         server.getUserReservationByStatus("Rejected", processDoneReservation);
-        server.getUserReservationByStatus("Deleted", processDoneReservation);
     } else if (brewingStatus.toLowerCase() === "brewing") {
         server.getUserReservationByStatus("Approved", processApprovedReservations);
     }
@@ -258,7 +258,6 @@ function checkBrewing() {
                     console.log("Kettle Stops brewing");
                 }
             );
-        server.getUserReservationByStatus("Brewing", processBrewingReservations);
     } else if (currentTemperature > 30 && currentTemperature <= 99 && brewingStatus === "Not Brewing") {
         server.sendToFirebase('kettle/brewing', "Starting")
             .then(
