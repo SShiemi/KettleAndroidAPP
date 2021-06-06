@@ -2,6 +2,8 @@
 
 In this folder we have all the files that have to be placed on the RaspberryPi.
 
+![Raspberry Logo](raspberryLogo.png)
+
 ## Project Dependencies:
 
 - nodejs (Min version 10 - Max version 14)

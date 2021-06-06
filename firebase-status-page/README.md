@@ -1,4 +1,6 @@
 # Firebase status page
+![Firebase](firebase.png)
+
 This is a firebase status page designed to show the current state of the kettle. 
 
 As a side functionality the page can be used to as to manually access the realtime database.

@@ -8,6 +8,8 @@ For more instructions check the corresponding folders.
 
 ## Firebase Rules
 
+![Firebase](firebase-status-page/firebase.png)
+
 The project assumes that a firebase realtime database exists, and it is configured with the following rules:
 
 ```javascript
