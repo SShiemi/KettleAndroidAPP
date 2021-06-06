@@ -121,7 +121,7 @@
             android:shadowDx="5"
             android:shadowDy="5"
             android:shadowRadius="2"
-            android:text="Level of water (in cl) "
+            android:text="Level of water (in ml) "
             android:textColor="#5B2B2A"
             android:textSize="40sp"
             android:textStyle="bold" />

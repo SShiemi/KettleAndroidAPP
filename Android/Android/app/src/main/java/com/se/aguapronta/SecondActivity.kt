@@ -36,6 +36,7 @@ class SecondActivity : AppCompatActivity() {
     public var aval = false
     public var curWater = 0
     public var countreserv = 0
+    public var countreject = 0
 
     lateinit var notificationManager: NotificationManager
     lateinit var notificationChannel: NotificationChannel
@@ -82,9 +83,7 @@ class SecondActivity : AppCompatActivity() {
                 curWater = sb.toString().toInt()
                 /** WATER UPDATE **/
 
-
                 /** Availability **/
-                //var cur_water2 = dataSnapshot.child("cur_water").getValue().toString().toInt()
                 var status =  dataSnapshot.child("status").getValue()
                 var brewing =  dataSnapshot.child("brewing").getValue().toString()
 
@@ -94,7 +93,7 @@ class SecondActivity : AppCompatActivity() {
                 statusapp.text = sb.toString()
 
 
-                if(brewing.equals("Brewing", ignoreCase = true)){
+                if(brewing.equals("Starting", ignoreCase = true)){
                     aval = false
                     brew = true
                     val avalsymb2 = findViewById(R.id.avalsymb2) as ImageView
@@ -109,19 +108,18 @@ class SecondActivity : AppCompatActivity() {
                 }
 
 
-                if(curWater < 27 || brewing.equals("Brewing", ignoreCase = true)){
+                if(curWater < 27 || !status.toString().equals("Idle", ignoreCase = true)){
                     aval = false
                     val avalsymb1 = findViewById(R.id.avalsymb1) as ImageView
                     avalsymb1.setImageResource(R.drawable.nocross)
                 }
 
-                else if(curWater > 27 && status.toString().equals("Idle", ignoreCase = true)  && brewing.equals("Not Brewing", ignoreCase = true)){
+                else if(curWater > 27 && status.toString().equals("Idle", ignoreCase = true)){
                     aval = true
                     val avalsymb1 = findViewById(R.id.avalsymb1) as ImageView
                     avalsymb1.setImageResource(R.drawable.cross)
                 }
                 /** Availability **/
-                //ceil()
 
                 /** Number of possible Cups **/
                 var cur_water3 = dataSnapshot.child("cur_water").getValue().toString().toInt()
@@ -159,7 +157,9 @@ class SecondActivity : AppCompatActivity() {
                         countreserv +=1
                         sb2.append("$status")
 
-                        if(status.toString().equals("Deleted", ignoreCase = true)){
+
+
+                        if(status.toString().equals("Done", ignoreCase = true)){
                             notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                             val intent = Intent(this@SecondActivity,SecondActivity::class.java)
 
@@ -187,7 +187,11 @@ class SecondActivity : AppCompatActivity() {
                             notificationManager.notify(1, builder.build())
 
 
-                            Toast.makeText(this@SecondActivity, "Your reserved tea is ready!", Toast.LENGTH_LONG).show()
+                            Toast.makeText(this@SecondActivity, "Your tea is ready!", Toast.LENGTH_LONG).show()
+                        }
+
+                        if(status.toString().equals("Rejected", ignoreCase = true)){
+                            Toast.makeText(this@SecondActivity, "Your reserved tea with $amount cl was rejected!", Toast.LENGTH_LONG).show()
                         }
 
 
@@ -224,14 +228,14 @@ class SecondActivity : AppCompatActivity() {
                 for(i in snapshot.children){
                 var status = i.child("status").value
                 var amount = i.child("amount").value.toString()
-                if(status.toString().equals("Rejected", ignoreCase = true)){
-                        Toast.makeText(this@SecondActivity, "Your reserved tea with $amount cl was rejected!", Toast.LENGTH_LONG).show()
-                }
-                if(status.toString().equals("Rejected", ignoreCase = true)  || textstatres.toString().equals("Deleted", ignoreCase = true)) {
+                //var struct = UserReservation(amount.toInt(),status.toString(),currentUserId)
+                if(status.toString().equals("Rejected", ignoreCase = true) || status.toString().equals("Deleted", ignoreCase = true) || status.toString().equals("Done", ignoreCase = true)) {
                     count-=1
                     }
                 }
                 textstatres.text = "$count in line"
+
+
             }
 
         }
@@ -265,13 +269,12 @@ class SecondActivity : AppCompatActivity() {
         if (v != null) {
             v.startAnimation(animation1)
             v.startAnimation(animation2)
-            database.setValue("Idle")
-            state.text="Idle"
+            database.setValue("Starting")
+            state.text="Starting"
         }
     }
 
     public fun offClicked(v: View?) {
-        //Toast.makeText(this, "Let's Begin!", Toast.LENGTH_SHORT).show()
         var database = FirebaseDatabase.getInstance().getReference("kettle/status")
         val state = findViewById(R.id.state) as TextView
         val animation1 = AnimationUtils.loadAnimation(this, R.anim.scale_up)
@@ -279,8 +282,8 @@ class SecondActivity : AppCompatActivity() {
         if (v != null) {
             v.startAnimation(animation1)
             v.startAnimation(animation2)
-            database.setValue("Off")
-            state.text="Off"
+            database.setValue("Shutting Down")
+            state.text="Shutting Down"
         }
 
     }
@@ -293,12 +296,12 @@ class SecondActivity : AppCompatActivity() {
         if (v != null) {
             v.startAnimation(animation1)
             v.startAnimation(animation2)
-            if(aval){
+            if(aval && !brew){
                 database.setValue("Starting")
             }
 
-            else if(!aval){
-                Toast.makeText(this, "The kettle is occupied/turned off/without the min water required!", Toast.LENGTH_SHORT).show()
+            else if(!aval || brew){
+                Toast.makeText(this, "The kettle is brewing/turned off/without the min water required!", Toast.LENGTH_SHORT).show()
             }
 
         }
@@ -307,12 +310,11 @@ class SecondActivity : AppCompatActivity() {
     public fun reservClicked(v: View?) {
         val animation1 = AnimationUtils.loadAnimation(this, R.anim.scale_up)
         val animation2 = AnimationUtils.loadAnimation(this, R.anim.scale_down)
-
         //settings.visibility=View.VISIBLE
         if (v != null) {
             v.startAnimation(animation1)
             v.startAnimation(animation2)
-                if(brew && !aval && curWater > 27) {
+                if(aval && curWater > 27) {
                     Toast.makeText(this, "Make your reservation!", Toast.LENGTH_SHORT).show()
                     val btninput = findViewById(R.id.btnForm) as ImageButton
                     val numberform = findViewById(R.id.editTextNumberDecimal) as EditText
@@ -322,8 +324,8 @@ class SecondActivity : AppCompatActivity() {
                     numberform.visibility = View.VISIBLE
                 }
 
-                else if(!brew && aval){
-                    Toast.makeText(this, "The kettle is available and with enough water!", Toast.LENGTH_SHORT).show()
+                else if(!aval){
+                    Toast.makeText(this, "The kettle is turned off/without enough water!", Toast.LENGTH_SHORT).show()
                 }
 
         }
@@ -336,11 +338,9 @@ class SecondActivity : AppCompatActivity() {
 
         val animation1 = AnimationUtils.loadAnimation(this, R.anim.scale_up)
         val animation2 = AnimationUtils.loadAnimation(this, R.anim.scale_down)
-        //val btninput = findViewById(R.id.btnForm) as ImageButton
         val numberform = findViewById(R.id.editTextNumberDecimal) as EditText
         val btninput = findViewById(R.id.btnForm) as ImageButton
-        //btninput.text = ""
-        //settings.visibility=View.VISIBLE
+
         if (v != null) {
             v.startAnimation(animation1)
             v.startAnimation(animation2)
