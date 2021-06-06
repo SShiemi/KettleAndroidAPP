@@ -118,4 +118,8 @@ When the status is either `Starting` or `Stop Brewing` the RaspberryPi detects t
 
 ### Reservation Logic
 
-//TODO, awaiting last tests
+Various events change the status of hte reservations, along the way. All changes are going to be noted below
+
+#### Approve/Rejection logic
+
+When a reservation request is received, 

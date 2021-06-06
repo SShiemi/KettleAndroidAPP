@@ -31,7 +31,11 @@ function sendToFirebase(path, value) {
 }
 
 function deleteFromFirebase(path) {
-    return database.ref(path).remove().catch((error) => {
+    return database.ref(path).set({}).then(
+        function (){
+            console.log(path + " deleted ")
+        }
+    ).catch((error) => {
         console.log('Synchronization failed at ' + path);
         console.log('Error on send data ' + error);
         throw error;
