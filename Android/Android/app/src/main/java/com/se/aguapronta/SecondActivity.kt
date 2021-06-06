@@ -227,8 +227,6 @@ class SecondActivity : AppCompatActivity() {
                 var textstatres = findViewById(R.id.textstatres) as TextView
                 for(i in snapshot.children){
                 var status = i.child("status").value
-                var amount = i.child("amount").value.toString()
-                //var struct = UserReservation(amount.toInt(),status.toString(),currentUserId)
                 if(status.toString().equals("Rejected", ignoreCase = true) || status.toString().equals("Deleted", ignoreCase = true) || status.toString().equals("Done", ignoreCase = true)) {
                     count-=1
                     }
@@ -261,7 +259,6 @@ class SecondActivity : AppCompatActivity() {
     }
 
     public fun onClicked(v: View?) {
-        //Toast.makeText(this, "Let's Begin!", Toast.LENGTH_SHORT).show()
         var database = FirebaseDatabase.getInstance().getReference("kettle/status")
         val state = findViewById(R.id.state) as TextView
         val animation1 = AnimationUtils.loadAnimation(this, R.anim.scale_up)
@@ -289,7 +286,6 @@ class SecondActivity : AppCompatActivity() {
     }
 
     public fun startClicked(v: View?) {
-        //Toast.makeText(this, "Let's Begin!", Toast.LENGTH_SHORT).show()
         var database = FirebaseDatabase.getInstance().getReference("kettle/brewing")
         val animation1 = AnimationUtils.loadAnimation(this, R.anim.scale_up)
         val animation2 = AnimationUtils.loadAnimation(this, R.anim.scale_down)
@@ -310,7 +306,6 @@ class SecondActivity : AppCompatActivity() {
     public fun reservClicked(v: View?) {
         val animation1 = AnimationUtils.loadAnimation(this, R.anim.scale_up)
         val animation2 = AnimationUtils.loadAnimation(this, R.anim.scale_down)
-        //settings.visibility=View.VISIBLE
         if (v != null) {
             v.startAnimation(animation1)
             v.startAnimation(animation2)
