@@ -2,7 +2,7 @@
 #include <DallasTemperature.h>
 #include "HX711.h"
 #define ONE_WIRE_BUS D4
-#define calibration_factor -1050 //This value is obtained using the SparkFun_HX711_Calibration sketch
+#define calibration_factor -1600 //This value is obtained using the SparkFun_HX711_Calibration sketch
 #define LOADCELL_DOUT_PIN  D7
 #define LOADCELL_SCK_PIN  D6
 
