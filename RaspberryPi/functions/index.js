@@ -9,9 +9,9 @@ debugSerialPort().then(function (){
 });
 
 async function debugSerialPort(){
-    for (let i = 0; i < 11; i++) {
+    for (let i = 0; i < 15; i++) {
         await sleep(1000);
-        sensorsMock.debug("water:900;temp:20");
+        sensorsMock.debug("water:900;temp:200");
     }
 }
 
