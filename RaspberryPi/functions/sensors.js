@@ -51,8 +51,8 @@ function toggleBrewing(brewingRef) {
         server.sendToFirebase("/kettle/brewing", "Not Brewing").then(function () {
             console.log("Brewing changed to: Stop Brewing");
         });
-        server.getUserReservationByStatus("Brewing", processBrewingReservations);
         server.getUserReservationByStatus("Done", processDoneReservation);
+        server.getUserReservationByStatus("Brewing", processBrewingReservations);
         server.getUserReservationByStatus("Rejected", processDoneReservation);
     } else if (brewingStatus.toLowerCase() === "brewing") {
         server.getUserReservationByStatus("Approved", processApprovedReservations);
