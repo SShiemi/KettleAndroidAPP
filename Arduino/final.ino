@@ -38,7 +38,7 @@ void loop(){
   Celcius=sensors.getTempCByIndex(0);
  
   
-  Serial.print("water:"); Serial.print(scale.get_units(), 1); Serial.print(";temp:"); Serial.println(Celcius); //scale.get_units() returns a float
+  Serial.print("water:"); Serial.print(scale.get_units(10), 1); Serial.print(";temp:"); Serial.println(Celcius); //scale.get_units() returns a float
   
     if (Celcius >= 100){
       delay(1000);
