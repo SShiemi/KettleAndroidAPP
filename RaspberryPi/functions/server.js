@@ -22,9 +22,16 @@ let database = app.database();
 
 function sendToFirebase(path, value) {
     return database.ref(path).set(value).then(() => {
-        console.log('Synchronization succeeded');
         return value;
     }).catch((error) => {
+        console.log('Synchronization failed at ' + path);
+        console.log('Error on send data ' + error);
+        throw error;
+    });
+}
+
+function deleteFromFirebase(path) {
+    return database.ref(path).remove().catch((error) => {
         console.log('Synchronization failed at ' + path);
         console.log('Error on send data ' + error);
         throw error;
@@ -61,6 +68,7 @@ let output = {
     listenRef: listenRef,
     sendToFirebase: sendToFirebase,
     listenRefChild: listenRefChild,
+    deleteFromFirebase: deleteFromFirebase,
     getUserReservationByStatus: getUserReservationByStatus,
 };
 

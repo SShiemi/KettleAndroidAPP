@@ -8,30 +8,34 @@ For more instructions check the corresponding folders.
 
 ## Firebase Rules
 
+![Firebase](firebase-status-page/firebase.png)
+
 The project assumes that a firebase realtime database exists, and it is configured with the following rules:
 
 ```javascript
 {
-  "rules": {
-    ".read": true,
-    ".write": true,
-    "users": {
-      "$uid": {
-        ".write": "auth != null && auth.uid == $uid"
-      }
-    },
-		"kettle" : {
-      ".write": "auth != null && auth.uid == 'f0YWpdQP04Yi2vG8mB49LCBBFlm2'"
-    },      
-    "reservations": {
-      ".write": "auth != null"
-    },
-    "user-reservations": {
-      ".write": "auth != null && auth.uid == 'f0YWpdQP04Yi2vG8mB49LCBBFlm2'",
-      "$uid": {
-        ".write": "auth != null && auth.uid == $uid"
-      }
+    "rules": {
+        ".read": true,
+            ".write": true,
+            "users": {
+                "$uid": {
+                    ".write": "auth != null && auth.uid == $uid",
+                }
+            },
+        "kettle": {
+            ".write": "auth != null && auth.uid == '<UUID>'"
+        },
+        "reservations": {
+            ".write": "auth != null"
+        },
+        "user-reservations": {
+            ".write": "auth != null && auth.uid == '<UUID>'",
+            "$uid": {
+                ".write": "auth != null && auth.uid == $uid || auth.uid == '<UUID>'"
+            }
+        }
     }
-  }
 }
 ```
+
+___IMPORTANT___: `<UUID>` is the UUID of our admin user, in your case you should create your own user and replace the UUID there.

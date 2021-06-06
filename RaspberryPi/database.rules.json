@@ -16,7 +16,7 @@
     "user-reservations": {
       ".write": "auth != null && auth.uid == 'f0YWpdQP04Yi2vG8mB49LCBBFlm2'",
       "$uid": {
-        ".write": "auth != null && auth.uid == $uid"
+        ".write": "auth != null && auth.uid == $uid || auth.uid == 'f0YWpdQP04Yi2vG8mB49LCBBFlm2' "
       }
     }
   }

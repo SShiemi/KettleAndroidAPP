@@ -2,10 +2,8 @@
 const serialport = require("serialport");
 const domain = require("./sensors");
 
-// ls /dev/tty* to find port
 const port = new serialport("COM3", {
     baudRate: 9600,
-    // parser:serialport.parsers.readline('\n')
 });
 
 const Readline = serialport.parsers.Readline;

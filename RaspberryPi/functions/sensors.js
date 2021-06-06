@@ -1,4 +1,5 @@
 const server = require('./server');// data module
+const KETTLE_WEIGHT = 440;
 
 let currentWater = 0,
     currentTemperature = 0,
@@ -8,6 +9,7 @@ let lastWeightMeasurements = [];
 let waterIsCounted = false;
 
 let brewingStatus = 'Not Brewing';
+let kettleStatus = 'Off';
 
 function startListeners() {
     server.listenRef("/kettle/status", toggleStatus);
@@ -32,20 +34,28 @@ function toggleStatus(statusRef) {
         });
         //TODO add code to turn the kettle OFF if proper hardware exists!
     }
+
+    kettleStatus = status;
 }
 
 function toggleBrewing(brewingRef) {
     brewingStatus = brewingRef.val();
 
-    if (brewingStatus.toLowerCase() === "Starting") {
+    console.log(brewingStatus);
+
+    if (brewingStatus.toLowerCase() === "starting") {
         server.sendToFirebase("/kettle/brewing", "Brewing").then(function () {
-            console.log("Brewing changed to:" + brewingStatus);
+            console.log("Brewing changed to: Brewing");
         });
-    } else if (brewingStatus.toLowerCase() === "Stop Brewing") {
+    } else if (brewingStatus.toLowerCase() === "stop brewing") {
         server.sendToFirebase("/kettle/brewing", "Not Brewing").then(function () {
-            console.log("Brewing changed to:" + brewingStatus);
+            console.log("Brewing changed to: Stop Brewing");
         });
         server.getUserReservationByStatus("Done", processDoneReservation);
+        server.getUserReservationByStatus("Brewing", processBrewingReservations);
+        server.getUserReservationByStatus("Rejected", processDoneReservation);
+    } else if (brewingStatus.toLowerCase() === "brewing") {
+        server.getUserReservationByStatus("Approved", processApprovedReservations);
     }
 }
 
@@ -72,18 +82,19 @@ function processNewReservations(reservationRef) {
 
         let UUID = reservationRef.getRef().getKey();
 
-        if (reservation.status.toLowerCase() === "pending") {
+        if (reservation.status.toLowerCase() === "pending" && kettleStatus.toLowerCase() === "idle") {
             if (reservation.amount < currentWater - totalWaterReserved) {
-                server.sendToFirebase("/reservations/" + UUID + "/status", "Approved")
+                let nextStatus = brewingStatus.toLowerCase() === "brewing" ? "Brewing" : "Approved";
+                server.sendToFirebase("/reservations/" + UUID + "/status", nextStatus)
                     .then(
                         function () {
-                            console.log("/reservations/" + UUID + "changed to Approved");
+                            console.log("/reservations/" + UUID + "changed to " + nextStatus);
                         }
                     );
-                server.sendToFirebase("/user-reservations/" + reservation.userUid + "/" + UUID + "/status", "Approved")
+                server.sendToFirebase("/user-reservations/" + reservation.userUid + "/" + UUID + "/status", nextStatus)
                     .then(
                         function () {
-                            console.log("/user-reservations/" + reservation.userUid + "/" + UUID + "changed to Approved");
+                            console.log("/user-reservations/" + reservation.userUid + "/" + UUID + "changed to " + nextStatus);
                         }
                     );
             } else {
@@ -134,20 +145,30 @@ function processBrewingReservations(reservationsRef) {
 
     if (reservations !== null) {
         for (const [UUID, entry] of Object.entries(reservations)) {
-            if (entry.status.toLowerCase() === "brewing") {
-                server.sendToFirebase("/reservations/" + UUID + "/status", "Done")
-                    .then(
-                        function () {
-                            console.log("/reservations/" + UUID + "changed to Done");
-                        }
-                    );
-                server.sendToFirebase("/user-reservations/" + entry.userUid + "/" + UUID + "/status", "Done")
-                    .then(
-                        function () {
-                            console.log("/user-reservations/" + entry.userUid + "/" + UUID + "changed to Done");
-                        }
-                    );
-            }
+            server.sendToFirebase("/reservations/" + UUID + "/status", "Done")
+                .then(
+                    function () {
+                        console.log("/reservations/" + UUID + " changed to Done");
+                        server.deleteFromFirebase("/reservations/" + UUID)
+                            .then(
+                                function () {
+                                    console.log("/user-reservations/" + entry.userUid + "/" + UUID + " Deleted");
+                                }
+                            );
+                    }
+                );
+            server.sendToFirebase("/user-reservations/" + entry.userUid + "/" + UUID + "/status", "Done")
+                .then(
+                    function () {
+                        console.log("/user-reservations/" + entry.userUid + "/" + UUID + " changed to Done");
+                        server.deleteFromFirebase("/user-reservations/" + entry.userUid + "/" + UUID)
+                            .then(
+                                function () {
+                                    console.log("/user-reservations/" + entry.userUid + "/" + UUID + " Deleted");
+                                }
+                            );
+                    }
+                );
         }
     }
 }
@@ -158,27 +179,38 @@ function processDoneReservation(reservationsRef) {
 
     if (reservations !== null) {
         for (const [UUID, entry] of Object.entries(reservations)) {
-            if (entry.status.toLowerCase() === "done") {
-                server.sendToFirebase("/reservations/" + UUID + "/status", "Deleted")
-                    .then(
-                        function () {
-                            console.log("/reservations/" + UUID + "changed to Done");
-                        }
-                    );
-                server.sendToFirebase("/user-reservations/" + entry.userUid + "/" + UUID + "/status", "Deleted")
-                    .then(
-                        function () {
-                            console.log("/user-reservations/" + entry.userUid + "/" + UUID + "changed to Done");
-                        }
-                    );
-            }
+            server.sendToFirebase("/reservations/" + UUID + "/status", "Deleted")
+                .then(
+                    function () {
+                        console.log("/reservations/" + UUID)
+                        server.deleteFromFirebase("/reservations/" + UUID)
+                            .then(
+                                function () {
+                                    console.log("/reservations/" + UUID + " Deleted");
+                                }
+                            );
+                    }
+                );
+            server.sendToFirebase("/user-reservations/" + entry.userUid + "/" + UUID + "/status", "Deleted")
+                .then(
+                    function () {
+                        console.log("/user-reservations/" + entry.userUid + "/" + UUID);
+                        server.deleteFromFirebase("/user-reservations/" + entry.userUid + "/" + UUID)
+                            .then(
+                                function () {
+                                    console.log("/user-reservations/" + entry.userUid + "/" + UUID + " Deleted");
+                                }
+                            );
+                    }
+                );
+
         }
     }
 }
 
 function handleArduinoData(data) {
     currentTemperature = parseFloat(data["temp"]);
-    addWaterMeasurement(data["water"]);
+    addWaterMeasurement(data["water"] - KETTLE_WEIGHT);
     checkBrewing();
 }
 
@@ -226,9 +258,8 @@ function checkBrewing() {
                     console.log("Kettle Stops brewing");
                 }
             );
-        server.getUserReservationByStatus("Brewing", processBrewingReservations);
-    } else if (currentTemperature > 30 && brewingStatus === "Not Brewing") {
-        server.sendToFirebase('kettle/brewing', "Start Brewing")
+    } else if (currentTemperature > 30 && currentTemperature <= 99 && brewingStatus === "Not Brewing") {
+        server.sendToFirebase('kettle/brewing', "Starting")
             .then(
                 function () {
                     console.log("Kettle Starts brewing");
