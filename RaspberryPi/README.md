@@ -122,4 +122,23 @@ Various events change the status of hte reservations, along the way. All changes
 
 #### Approve/Rejection logic
 
-When a reservation request is received, 
+When a reservation request is received, it can be either approved or rejected. 
+All requests arrive in the state Pending.
+There are 2 types of approval, if the kettle is not brewing, the requests pass to the state `Approved`,
+otherwise they enter directly in the state `Brewing`. Rejected requests get their state changed to `Rejected`
+
+The full state table is as follow:
+
+| Status  | Description                            | Next Statuses      | Terminal State |
+|:-------:|:---------------------------------------|:------------------:|:--------------:|
+|Pending  |	Reservation sent and awaits evaluation | Approved, Rejected | No             |
+|Rejected |	Not enough water to brew               | N/A                | Yes            | 
+|Approved |	Reservation is awaiting to be brewed   | Brewing            | No             |
+|Brewing  |	Kettle is brewing your water           | Done               | No             |
+|Done     |	Water is brewed                        | Deleted            | No             |
+|Deleted  |	Reservation complete                   | N/A                | Yes            |
+
+___IMPORTANT!___ Reservations are received only when the kettle is ON!
+
+There is a clean up process that deletes dangling `Deleted` requests, every time the kettle stops brewing
+
