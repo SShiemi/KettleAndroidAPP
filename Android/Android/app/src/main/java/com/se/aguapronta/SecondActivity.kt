@@ -123,7 +123,7 @@ class SecondActivity : AppCompatActivity() {
 
                 /** Number of possible Cups **/
                 var cur_water3 = dataSnapshot.child("cur_water").getValue().toString().toInt()
-                var numbertea = ceil((cur_water3/27).toDouble())
+                var numbertea = ceil((cur_water3/270).toDouble())
                 val possiblecup = findViewById(R.id.possiblecup) as TextView
                 possiblecup.text = numbertea.toString()
                 /** Number of possible Cups **/
@@ -191,7 +191,7 @@ class SecondActivity : AppCompatActivity() {
                         }
 
                         if(status.toString().equals("Rejected", ignoreCase = true)){
-                            Toast.makeText(this@SecondActivity, "Your reserved tea with $amount cl was rejected!", Toast.LENGTH_LONG).show()
+                            Toast.makeText(this@SecondActivity, "Your reserved tea with $amount ml was rejected!", Toast.LENGTH_LONG).show()
                         }
 
 
