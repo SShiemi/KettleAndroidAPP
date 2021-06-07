@@ -90,7 +90,7 @@ it switches the brewing status to `Stop Brewing`
 
 Raspberry waits for notifications of intermediate statuses and performs all the related automatic transitions.
 
-Table of brewing statuses:
+Table of kettle statuses:
 
 | Status        | Description                             | Next Statuses |
 |:-------------:|:----------------------------------------|:-------------:|

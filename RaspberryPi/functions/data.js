@@ -2,7 +2,7 @@
 const serialport = require("serialport");
 const domain = require("./sensors");
 
-const port = new serialport("COM3", {
+const port = new serialport("COM4", {
     baudRate: 9600,
 });
 
@@ -21,6 +21,7 @@ function onPortOpen() {
 }
 
 function onData(data) {
+    console.log(data)
     domain.handleArduinoData(dataToObject(data));
 }
 

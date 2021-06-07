@@ -1,7 +1,7 @@
 const server = require('./server');// data module
 const KETTLE_WEIGHT = 440;
 
-let currentWater = 0,
+let currentWater = -1000,
     currentTemperature = 0,
     totalWaterReserved = 0;
 
@@ -222,13 +222,12 @@ function processDoneReservation(reservationsRef) {
 
 function handleArduinoData(data) {
     currentTemperature = parseFloat(data["temp"]);
-    addWaterMeasurement(data["water"] - KETTLE_WEIGHT);
+    addWaterMeasurement(parseInt(data["water"]) - KETTLE_WEIGHT);
     checkBrewing();
 }
 
 function addWaterMeasurement(measurement) {
-    lastWeightMeasurements.push(measurement / 10);
-
+    lastWeightMeasurements.push(Math.max((measurement / 10), 0));
     if (lastWeightMeasurements.length >= 10) {
         lastWeightMeasurements = lastWeightMeasurements.slice(-10);
 
@@ -241,8 +240,9 @@ function addWaterMeasurement(measurement) {
 }
 
 function updateWaterLevel(newWaterLevel) {
+    console.log("water: " + newWaterLevel);
     if (currentWater * 0.95 > newWaterLevel || newWaterLevel > currentWater * 1.05) {
-        currentWater = newWaterLevel;
+        currentWater = Math.round(newWaterLevel);
         server.sendToFirebase('kettle/cur_water', currentWater)
             .then(
                 function () {
@@ -263,7 +263,7 @@ function updateWaterLevel(newWaterLevel) {
 }
 
 function checkBrewing() {
-    if (currentTemperature > 99 && brewingStatus === "Brewing") {
+    if (currentTemperature > 100 && brewingStatus === "Brewing") {
         server.sendToFirebase('kettle/brewing', "Stop Brewing")
             .then(
                 function () {
@@ -273,7 +273,8 @@ function checkBrewing() {
         server.getUserReservationByStatus("Brewing", processBrewingReservations);
         server.getUserReservationByStatus("Rejected", processDoneReservation);
         truncateUserReservations();
-    } else if (currentTemperature > 30 && currentTemperature <= 99 && brewingStatus === "Not Brewing") {
+        // In order to fix this we need another status instead of not brewing, Ex. Cooling down.
+    } else if (currentTemperature > 30 && currentTemperature <= 100 && brewingStatus === "Not Brewing") {
         server.sendToFirebase('kettle/brewing', "Starting")
             .then(
                 function () {

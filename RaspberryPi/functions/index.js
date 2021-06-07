@@ -3,7 +3,7 @@ const domain = require("./sensors");
 const sensorsMock = require("./data");
 
 domain.startListeners();
-
+//
 // debugSerialPort().then(function (){
 //     console.log("Arduino Mock is done loading data!");
 // });
