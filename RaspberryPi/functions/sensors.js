@@ -91,7 +91,7 @@ function processNewReservations(reservationRef) {
         let UUID = reservationRef.getRef().getKey();
 
         if (reservation.status.toLowerCase() === "pending" && kettleStatus.toLowerCase() === "idle") {
-            if (reservation.amount < currentWater - totalWaterReserved) {
+            if (reservation.amount < currentWater - totalWaterReserved && reservation.amount > 27) {
                 let nextStatus = brewingStatus.toLowerCase() === "brewing" ? "Brewing" : "Approved";
                 server.sendToFirebase("/reservations/" + UUID + "/status", nextStatus)
                     .then(

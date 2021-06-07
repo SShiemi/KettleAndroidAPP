@@ -124,6 +124,9 @@ Various events change the status of hte reservations, along the way. All changes
 
 When a reservation request is received, it can be either approved or rejected. 
 All requests arrive in the state Pending.
+
+___IMPORTANT___ reservations of less than 27ml are automatically rejected!
+
 There are 2 types of approval, if the kettle is not brewing, the requests pass to the state `Approved`,
 otherwise they enter directly in the state `Brewing`. Rejected requests get their state changed to `Rejected`
 
