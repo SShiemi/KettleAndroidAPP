@@ -31,7 +31,7 @@ The kettle tab is divided in 3 parts:
   |OFF   | Turns the kettle OFF|
 
 
-![main](images/main.jpg)
+![main](images/main.png)
 
 ### Water Tab
 
