@@ -2,7 +2,7 @@
 
 ![Arduino Logo](ArduinoLogo.png)
 
-# Installation
+## Installation
 
 For our work we used __Arduino ESP8266: WeMos-D1R2__
 
@@ -35,3 +35,18 @@ For our work we used __Arduino ESP8266: WeMos-D1R2__
    - A guide for this can be found [here](https://www.instructables.com/Arduino-Scale-With-5kg-Load-Cell-and-HX711-Amplifi/)
    - In out case we found that we needed factor of __-1600__
    
+## Schemas
+
+Here are the schemas used for our setup.
+
+### Buzzer 
+
+![buzzer](images/buzzer.png)
+
+### Scale
+
+![Scale](images/weight.png)
+
+### Temperature sensor 
+
+![sensor](images/sensor.png)
