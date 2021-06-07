@@ -118,7 +118,7 @@ When the status is either `Starting` or `Stop Brewing` the RaspberryPi detects t
 
 ### Reservation Logic
 
-Various events change the status of hte reservations, along the way. All changes are going to be noted below
+Various events change the status of the reservations, along the way. All changes are going to be noted below
 
 #### Approve/Rejection logic
 
@@ -130,7 +130,7 @@ ___IMPORTANT___ reservations of less than 27ml are automatically rejected!
 There are 2 types of approval, if the kettle is not brewing, the requests pass to the state `Approved`,
 otherwise they enter directly in the state `Brewing`. Rejected requests get their state changed to `Rejected`
 
-The full state table is as follow:
+The full state table can be found bellow:
 
 | Status  | Description                            | Next Statuses      | Terminal State |
 |:-------:|:---------------------------------------|:------------------:|:--------------:|
@@ -141,9 +141,9 @@ The full state table is as follow:
 |Done     |	Water is brewed                        | Deleted            | No             |
 |Deleted  |	Reservation complete                   | N/A                | Yes            |
 
-___IMPORTANT!___ Reservations are received only when the kettle is ON!
+___IMPORTANT!___ Reservations are accepted only when the kettle is ON!
 
-There is a clean up process that deletes dangling `Deleted` requests, every time the kettle stops brewing
+There is a clean-up process that deletes dangling `Deleted` requests, every time the kettle stops brewing
 
 ### Mocks
 
