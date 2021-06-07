@@ -12,10 +12,11 @@ This repository contains all the code for the different elements of the architec
 
 Detailed documentation about every element can be found inside of their respective folders.
 
-- [Arduino](Arduino)
-- [Android](Android)
-- [RaspberryPy](RaspberryPi)
-- [Test Page](firebase-status-page)
+- [Arduino](Arduino) - Code referring to the arduino implementation
+- [Android](Android) - Source code of the Android application
+- [RaspberryPy](RaspberryPi) - NodeJS server that should run on the Raspberry
+- [Test Page](firebase-status-page) - Test page used for tests, info, etc
+  It served as a mock for RaspberryPi during initial development.
 
 ## Firebase Rules
 
