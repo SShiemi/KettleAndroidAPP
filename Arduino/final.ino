@@ -2,7 +2,7 @@
 #include <DallasTemperature.h>
 #include "HX711.h"
 #define ONE_WIRE_BUS D4
-#define calibration_factor -1050 //This value is obtained using the SparkFun_HX711_Calibration sketch
+#define calibration_factor -1600 //This value is obtained using the SparkFun_HX711_Calibration sketch
 #define LOADCELL_DOUT_PIN  D7
 #define LOADCELL_SCK_PIN  D6
 
@@ -38,7 +38,7 @@ void loop(){
   Celcius=sensors.getTempCByIndex(0);
  
   
-  Serial.print("water:"); Serial.print(scale.get_units(), 1); Serial.print(";temp:"); Serial.println(Celcius); //scale.get_units() returns a float
+  Serial.print("water:"); Serial.print(scale.get_units(10), 1); Serial.print(";temp:"); Serial.println(Celcius); //scale.get_units() returns a float
   
     if (Celcius >= 100){
       delay(1000);
