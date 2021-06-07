@@ -5,6 +5,8 @@ This is a firebase status page designed to show the current state of the kettle.
 
 As a side functionality the page can be used to as to manually access the realtime database.
 
+This code is useful in understanding how firebase's realtime database works.
+
 ## Installation
 This part of the project can ideally be installed on the RaspberryPi sp that it can eventually be accessed within the network
 
