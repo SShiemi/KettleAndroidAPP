@@ -6,6 +6,17 @@ Each of the folders contains a separate part of the work which should be install
 
 For more instructions check the corresponding folders.
 
+## Codebase
+
+This repository contains all the code for the different elements of the architecture.
+
+Detailed documentation about every element can be found inside of their respective folders.
+
+- [Arduino](Arduino)
+- [Android](Android)
+- [RaspberryPy](RaspberryPi)
+- [Test Page](firebase-status-page)
+
 ## Firebase Rules
 
 ![Firebase](firebase-status-page/firebase.png)
