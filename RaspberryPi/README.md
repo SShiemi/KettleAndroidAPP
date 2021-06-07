@@ -145,3 +145,7 @@ ___IMPORTANT!___ Reservations are received only when the kettle is ON!
 
 There is a clean up process that deletes dangling `Deleted` requests, every time the kettle stops brewing
 
+### Mocks
+
+In order to simplify the remote development of the project, a mock for the arduino was created in the `index.js`
+In order to activate it, simply uncomment the lines ___7-9___
