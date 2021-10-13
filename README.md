@@ -49,3 +49,5 @@ This tab is used to reserve water. It is separated into 3 parts:
 
 When a reservation is processed, or completed the user receives a notification.
 
+
+if interested in seeing the Arduino, RaspberryPi and firebase work, you can check out the full work here https://github.com/HristoValkanov/chaleira-fcup
